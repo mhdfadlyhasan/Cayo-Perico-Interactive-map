@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proof of Concept</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-mouse-position@1.2.0/src/L.Control.MousePosition.js"></script>
+  <style>
+    #mapid { height: 800px; }
+  </style>
+</head>
+<body>
+  <div id="mapid"></div>
+</body>
+<script>
+
+targetMap = [
+  [76.81,40.67,"Motorcycle"],
+  [74.25,65.5,"Motorcycle"],
+  [77.8125,72.0625,"Motorcycle"],
+  [91.625,57.28125,"Motorcycle"],
+  [15.5,89.5625,"Motorcycle"],
+  [36.5,57.71875,"Motorcycle"],
+
+  [51.025,75.59375,"Cutting Powder"],
+  [48.8125,85.1875,"Cutting Powder"],
+  [44.0625,61.40,"Cutting Powder"],
+
+  [73.125,10.53125,"Grappling Hook"],
+  [70,39.1,"Grappling Hook"],
+  [72.09,41.59,"Grappling Hook"],
+  [75.71875,58.3475,"Grappling Hook"],
+  [83.03,58.875,"Grappling Hook"],
+  [67.5,58.84375,"Grappling Hook"],
+  [73.6875, 69.96,"Grappling Hook"],
+  [73.6875, 69.96,"Grappling Hook"],
+  [77,71.53125,"Grappling Hook"],
+  [48.85938, 85.35938,"Grappling Hook"],
+  [47.78125, 93.65625,"Grappling Hook"],
+  [35.8125, 78,34375,"Grappling Hook"],
+  [40.54, 60.19531,"Grappling Hook"],
+  [49.39036, 57.85156, "Grappling Hook"],
+  [49.39036, 57.85156, "Grappling Hook"],
+
+  [81.375, 40.21875, "Uniform"],
+  [80.89844, 41.0625, "Uniform"],
+  [68.65625, 53.22656, "Uniform"],
+  [78.15625, 67.80, "Uniform"],
+  [77.125,69.96875, "Uniform"],
+  [76.71875, 72.37891, "Uniform"],
+  [73.73828, 73.41016, "Uniform"],
+  [57.652344, 73.24609, "Uniform"],
+  [50.84375, 70.86328, "Uniform"],
+  [51.21484, 65.05078, "Uniform"],
+  [47.21484, 65.62891, "Uniform"],
+  [44.07422, 61.11719, "Uniform"],
+  [41.22266, 62.57031, "Uniform"],
+  [34.47656, 59.32813, "Uniform"],
+  [31.12891, 70.4375, "Uniform"],
+  [35.82031, 78.13281, "Uniform"],
+  
+  [81.28125, 41.23828, "Truck"],
+  [81.28125, 41.23828, "Truck"],
+  [76.19922, 72.94141, "Truck"],
+  [46.75781, 59.85938, "Truck"],
+  [22.46875, 63.67969, "Truck"],
+
+  [85.06875, 36.50619, "Sec Target"],
+  [85.225, 37.13153, "Sec Target"],
+  [79.85, 40.13316, "Sec Target"],
+  [77.85, 68.41227, "Sec Target"],
+  [76.94375, 71.78911, "Sec Target"],
+  [73.38125, 69.50661, "Sec Target"],
+  [50.75625, 74.75874, "Sec Target"],
+  [51.94375, 63.1274, "Sec Target"],
+  [49.19375, 64.9413, "Sec Target"],
+  [45.20625, 61.14235, "Sec Target"],
+  [43.87812, 81.5667, "Sec Target"],
+
+  [74.2875, 18.00837, "Bolt Cutter"],
+  [81.95469, 40.95411, "Bolt Cutter"],
+  [80.30625, 41.58756, "Bolt Cutter"],
+  [74.8375, 40.37655, "Bolt Cutter"],
+  [91.78437, 55.25133, "Bolt Cutter"],
+  [75.51875, 68.42196, "Bolt Cutter"],
+  [76.3625, 70.12601, "Bolt Cutter"],
+  [73.90937, 73.97186, "Bolt Cutter"],
+  [51.78437, 59.11157, "Bolt Cutter"],
+  [48.26875, 62.55211, "Bolt Cutter"],
+  [40.06562, 59.98683, "Bolt Cutter"],
+  [30.33125, 52.93909, "Bolt Cutter"],
+  [35.45625, 83.19126, "Bolt Cutter"],
+  [44.15937, 81.29894, "Bolt Cutter"],
+  [45.87812, 88.24022, "Bolt Cutter"],
+  [50.925, 75.86178, "Bolt Cutter"],
+]
+  var yx = L.latLng;
+  var xy = function(x, y) {
+      if (L.Util.isArray(x)) {    // When doing xy([x, y]);
+          return yx(x[1], x[0]);
+      }
+      return yx(y, x);  // When doing xy(x, y);
+  };
+  var map = L.map('mapid', {
+      crs: L.CRS.Simple,
+      maxZoom:20,
+      minZoom:2,
+
+  });
+  L.control.mousePosition().addTo(map);
+  
+  var bounds = [[0,0], [100,100]]; // jangan diganti
+  var image = L.imageOverlay('/gta-online-cayo-perico-original-map-by-rockstar-games.png', bounds).addTo(map);
+  map.fitBounds(bounds);
+  targetMap.forEach(element => {
+    var coordinate = xy(element[1], element[0]);
+    L.marker(coordinate).addTo(map).bindPopup(element[2]);
+  });
+</script>
+</html>
