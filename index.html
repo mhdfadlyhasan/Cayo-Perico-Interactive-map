@@ -12,7 +12,7 @@
     crossorigin=""></script>
     <script src="https://unpkg.com/leaflet-mouse-position@1.2.0/src/L.Control.MousePosition.js"></script>
   <style>
-    #mapid { height: 800px; }
+    #mapid { height: 100vh }
   </style>
 </head>
 <body>
@@ -52,7 +52,7 @@ targetMap = [
   [80.89844, 41.0625, "Uniform"],
   [68.65625, 53.22656, "Uniform"],
   [78.15625, 67.80, "Uniform"],
-  [77.125,69.96875, "Uniform"],
+  [77.125, 69.96875, "Uniform"],
   [76.71875, 72.37891, "Uniform"],
   [73.73828, 73.41016, "Uniform"],
   [57.652344, 73.24609, "Uniform"],
@@ -110,7 +110,7 @@ targetMap = [
   var map = L.map('mapid', {
       crs: L.CRS.Simple,
       maxZoom:20,
-      minZoom:2,
+      minZoom:3,
 
   });
   L.control.mousePosition().addTo(map);
